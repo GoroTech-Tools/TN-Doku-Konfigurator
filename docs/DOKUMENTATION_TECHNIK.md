@@ -73,7 +73,8 @@ Hauptfenster der Anwendung.
 |---------|-------------|
 | `_load_defaults()` | Versucht automatisch `Teilnehmer_Beginn.CSV` und `_Listen`-Ordner zu finden |
 | `_resolve_path()` | Löst relative Eingaben relativ zum EXE-/App-Verzeichnis auf |
-| `_browse_csv()` | Dateiauswahl-Dialog für CSV |
+| `_edit_csv()` | Öffnet die konfigurierte CSV in einer separaten Excel-Instanz |
+| `_on_csv_editor_closed()` | Liest die CSV nach dem Schließen der Excel-Instanz zwingend neu ein |
 | `_browse_output()` | Verzeichnisauswahl-Dialog für Ausgabe |
 | `_browse_lists()` | Verzeichnisauswahl-Dialog für Ablagesystem |
 | `_start_run()` | Startet Verarbeitung in separatem Thread |
@@ -82,16 +83,23 @@ Hauptfenster der Anwendung.
 
 **GUI-Elemente:**
 - `Entry` für CSV-Pfad, Ausgabe-Ordner und Ablagesystem-Ordner
-- `Button` für Pfadauswahl („…")
+- `Button` **„Bearbeiten"** zum Öffnen der konfigurierten CSV in Microsoft Excel
+- `Button` für die Auswahl der Ausgabe- und Ablagesystem-Ordner
 - `Treeview` für CSV-Vorschau (Name, Maßnahme, Kürzel)
 - `Text` für Log-Ausgabe
 - `Button` zum Starten („Dokumentation erstellen")
 
 **Pfadverhalten (GUI):**
 - Standardwerte werden als relative Pfade zur EXE angezeigt (z. B. `data/Teilnehmer_Beginn.CSV`, `output`, `data/Ablagesystem`).
-- Bei manueller Auswahl über Dateidialoge werden absolute Pfade in die Eingabefelder übernommen.
+- Der CSV-Pfad kann direkt im Eingabefeld angepasst werden; Ausgabe- und Ablagesystem-Ordner können über Dateidialoge gewählt werden.
 - Vor der Verarbeitung werden alle Pfade über `_resolve_path()` in normalisierte absolute Pfade umgewandelt.
 - Der Ausgabe-Ordner wird bei Bedarf automatisch erzeugt.
+
+**CSV-Bearbeitung mit Excel:**
+- Der Excel-Pfad wird über den Windows-Registry-Schlüssel `App Paths\excel.exe` ermittelt.
+- Excel wird mit `/x` als eigene Instanz gestartet, damit der Hintergrund-Thread auf das Schließen dieser Instanz warten kann.
+- Nach dem Schließen ruft die GUI `_load_csv()` auf; dadurch werden Teilnehmerdaten und Vorschau zwingend aktualisiert.
+- Microsoft Excel ist nur für diese Bearbeitungsfunktion erforderlich, nicht für die reguläre Dokumentationserstellung.
 
 **Threading:**
 - Verarbeitung läuft in `threading.Thread` – GUI bleibt responsive
@@ -174,7 +182,7 @@ Ermittelt Basisverzeichnis:
 
 ```python
 BUILD_INFO = {
-    'version': '1.2.4',
+    'version': '1.2.5',
     'build_date': '2026-09-20T00:00:00',
     'python_version': '3.13.14',
     'platform': 'win32',
@@ -192,7 +200,7 @@ Wird von `src/build.ps1` automatisch aktualisiert.
 PowerShell-Skript für vollautomatisches Build & Release.
 
 **Funktionsweise:**
-1. **Version-Bump:** Liest `src/build_info.py`, erhöht die Patch-Version (z. B. 1.2.4 → 1.2.4).
+1. **Version-Bump:** Liest `src/build_info.py` und erhöht standardmäßig automatisch die Patch-Version (z. B. 1.2.9 → 1.2.10).
 2. **Abhängigkeitsprüfung:** Verwendet bevorzugt die Projekt-`.venv` und prüft vor dem Build den Import von `python-docx`.
 3. **PyInstaller:** Ruft die `.spec`-Datei auf, erstellt eine Onefile-EXE in `dist/` und bindet `python-docx` ein.
 4. **Artifacts kopieren:**
@@ -208,7 +216,10 @@ PowerShell-Skript für vollautomatisches Build & Release.
 
 | Parameter | Effekt |
 |-----------|--------|
-| `-NoVersionBump` | Version nicht erhöhen (für Tests) |
+| `-NoVersionBump` | Version nicht erhöhen (für Tests oder reproduzierbare Builds) |
+| `-VersionIncrement Patch` | Patch-Version erhöhen; Standardwert für jeden normalen Build |
+| `-VersionIncrement Minor` | Minor-Version erhöhen und Patch auf `0` setzen |
+| `-VersionIncrement Major` | Major-Version erhöhen und Minor/Patch auf `0` setzen |
 | `-SkipZip` | Nur EXE, kein ZIP |
 | `-Help` | Hilfe anzeigen |
 | `-Quiet` | Keine Ausgabe (Script-Modus) |
@@ -217,6 +228,8 @@ PowerShell-Skript für vollautomatisches Build & Release.
 ```powershell
 .\src\build.ps1                    # Vollständiger Build mit Version-Bump
 .\src\build.ps1 -NoVersionBump     # Nur EXE/ZIP, ohne Version-Erhöhung
+.\src\build.ps1 -VersionIncrement Minor  # Minor-Version erhöhen
+.\src\build.ps1 -VersionIncrement Major  # Major-Version erhöhen
 .\src\build.ps1 -SkipZip           # EXE + Dateien, kein ZIP
 .\src\build.ps1 -Quiet             # Im Hintergrund, für CI/CD
 ```

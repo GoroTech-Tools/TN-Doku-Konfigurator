@@ -3,6 +3,8 @@
 
 param(
     [switch]$NoVersionBump,
+    [ValidateSet('Patch', 'Minor', 'Major')]
+    [string]$VersionIncrement = 'Patch',
     [switch]$SkipZip,
     [switch]$Help,
     [switch]$Quiet
@@ -18,7 +20,8 @@ $projectDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 function Show-Usage {
     Microsoft.PowerShell.Utility\Write-Host "TN-Doku-Konfigurator Build-Skript - Optionen:" -ForegroundColor DarkCyan
     Microsoft.PowerShell.Utility\Write-Host "  -Help          : Nur diese Hilfe anzeigen und beenden" -ForegroundColor DarkGray
-    Microsoft.PowerShell.Utility\Write-Host "  -NoVersionBump : Versionsnummer nicht erhöhen" -ForegroundColor DarkGray
+    Microsoft.PowerShell.Utility\Write-Host "  -NoVersionBump : Versionsnummer nicht erhöhen (z. B. für Tests)" -ForegroundColor DarkGray
+    Microsoft.PowerShell.Utility\Write-Host "  -VersionIncrement <Patch|Minor|Major> : Versionsanteil erhöhen (Standard: Patch)" -ForegroundColor DarkGray
     Microsoft.PowerShell.Utility\Write-Host "  -SkipZip       : ZIP-Erstellung überspringen" -ForegroundColor DarkGray
     Microsoft.PowerShell.Utility\Write-Host "  -Quiet         : Kompakte Ausgabe (nur Fehler + Kurzfazit)" -ForegroundColor DarkGray
 }
@@ -206,6 +209,33 @@ function New-ReleaseNotesContent {
     return ($lines -join "`r`n")
 }
 
+function Get-NextSemanticVersion {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Version,
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Patch', 'Minor', 'Major')]
+        [string]$Increment
+    )
+
+    if ($Version -notmatch '^(\d+)\.(\d+)\.(\d+)$') {
+        throw "Ungültige Semantic-Version: '$Version'. Erwartet wird MAJOR.MINOR.PATCH."
+    }
+
+    $major = [int]$Matches[1]
+    $minor = [int]$Matches[2]
+    $patch = [int]$Matches[3]
+
+    switch ($Increment) {
+        'Major' { $major++; $minor = 0; $patch = 0 }
+        'Minor' { $minor++; $patch = 0 }
+        'Patch' { $patch++ }
+    }
+
+    return "$major.$minor.$patch"
+}
+
 # ---------------------------------------------------------------------------
 # Schritt 0: Versionsnummer in build_info.py erhöhen
 # ---------------------------------------------------------------------------
@@ -215,24 +245,19 @@ $newVersion = $null
 if (Test-Path $buildInfoPath) {
     $content = Get-Content $buildInfoPath -Raw -Encoding UTF8
     if ($content -match "'version':\s*'([0-9]+)\.([0-9]+)\.([0-9]+)'") {
-        $major = [int]$Matches[1]
-        $minor = [int]$Matches[2]
-        $patch = [int]$Matches[3]
-        $currentVersion = "$major.$minor.$patch"
+        $currentVersion = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
 
         if ($NoVersionBump) {
             $newVersion = $currentVersion
             Write-Host "Versionssprung übersprungen. Version: $newVersion" -ForegroundColor Cyan
         } else {
-            $patch++
-            if ($patch -ge 10) { $patch = 0; $minor++ }
-            if ($minor -ge 10) { $minor = 0; $major++ }
-            $newVersion = "$major.$minor.$patch"
+            $newVersion = Get-NextSemanticVersion -Version $currentVersion -Increment $VersionIncrement
             $newDate = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
             $content = $content -replace "'version':\s*'[0-9]+\.[0-9]+\.[0-9]+'", "'version': '$newVersion'"
             $content = $content -replace "'build_date':\s*'[^']+'", "'build_date': '$newDate'"
             $content = $content.TrimEnd() + [Environment]::NewLine
-            Set-Content $buildInfoPath $content -Encoding UTF8
+            $buildInfoEncoding = [Text.UTF8Encoding]::new($false)
+            [IO.File]::WriteAllText($buildInfoPath, $content, $buildInfoEncoding)
             Write-Host "Neue Version: $newVersion" -ForegroundColor Cyan
 
             # README.md: Version-Zeile aktualisieren
@@ -242,11 +267,11 @@ if (Test-Path $buildInfoPath) {
                 $dateForMd = (Get-Date).ToString('dd.MM.yyyy')
                 $readme = [regex]::Replace(
                     $readme,
-                    '\*Version: [0-9]+\.[0-9]+\.[0-9]+ \(Build: [0-9]{2}\.[0-9]{2}\.[0-9]{4}\)\*',
-                    "*Version: $newVersion (Build: $dateForMd)*"
+                    '(?m)^(?:\*Version:\s*)?[0-9]+\.[0-9]+\.[0-9]+ \(Build: [0-9]{2}\.[0-9]{2}\.[0-9]{4}\)\*?\r?$',
+                    "$newVersion (Build: $dateForMd)"
                 )
                 Set-Content $readmePath $readme -Encoding UTF8
-                Write-Host "README.md aktualisiert." -ForegroundColor Cyan
+                Write-Host "README.md auf Version $newVersion aktualisiert." -ForegroundColor Cyan
             }
 
             # Weitere Docs: Versionsnummern ersetzen (currentVersion -> newVersion)
@@ -346,12 +371,22 @@ if (Test-Path $venvPython) {
 }
 
 if ($Quiet) {
-    & $pythonLauncher -m PyInstaller $specPath --noconfirm *> $pyInstallerLog
+    # PyInstaller schreibt reguläre Statusmeldungen nach stderr. Direkte
+    # Umleitung verhindert, dass PowerShell sie als NativeCommandError wertet.
+    $pyInstallerErrorLog = "$pyInstallerLog.stderr"
+    Remove-Item $pyInstallerErrorLog -Force -ErrorAction SilentlyContinue
+    & $pythonLauncher -m PyInstaller $specPath --noconfirm 1> $pyInstallerLog 2> $pyInstallerErrorLog
+    $pyInstallerExitCode = $LASTEXITCODE
+    if (Test-Path $pyInstallerErrorLog) {
+        Get-Content $pyInstallerErrorLog | Add-Content -Path $pyInstallerLog
+        Remove-Item $pyInstallerErrorLog -Force -ErrorAction SilentlyContinue
+    }
 } else {
     & $pythonLauncher -m PyInstaller $specPath --noconfirm
+    $pyInstallerExitCode = $LASTEXITCODE
 }
 
-if ($LASTEXITCODE -ne 0) {
+if ($pyInstallerExitCode -ne 0) {
     Write-Host "PyInstaller Build fehlgeschlagen!" -ForegroundColor Red
     if ($Quiet -and (Test-Path $pyInstallerLog)) {
         Write-Host "Details siehe: $pyInstallerLog" -ForegroundColor Yellow

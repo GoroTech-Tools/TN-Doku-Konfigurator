@@ -41,7 +41,7 @@ flowchart TD
 ### Option 1: Portable EXE (empfohlen)
 
 **Schritt 1: Archiv herunterladen**
-- Die Datei `TN-Doku-Konfigurator_v1.2.4.zip` herunterladen
+- Die Datei `TN-Doku-Konfigurator_v1.2.5.zip` herunterladen
 
 **Schritt 2: Entpacken**
 1. **Rechtsklick** auf die ZIP-Datei
@@ -186,7 +186,7 @@ Das GUI-Fenster öffnet sich.
 
 | Feld | Automatische Erkennung | Manuell anpassen |
 |------|----------------------|------------------|
-| **CSV-Datei** | `data/Teilnehmer_Beginn.CSV` (im Anwendungsverzeichnis) | Button „…" klicken |
+| **CSV-Datei** | `data/Teilnehmer_Beginn.CSV` (im Anwendungsverzeichnis) | Pfad direkt im Eingabefeld ändern; **„Bearbeiten"** öffnet die konfigurierte CSV in Excel |
 | **Ausgabe-Ordner** | Anwendungsverzeichnis (Ordner der EXE) | Button „…" klicken |
 | **Ablagesystem-Ordner** | `data/Ablagesystem` (im Anwendungsverzeichnis) | Button „…" klicken |
 
@@ -198,6 +198,10 @@ Im GUI-Fenster werden die Teilnehmer in einer Tabelle angezeigt:
 - **Spalte 3:** Maßnahmekürzel
 
 Falls die Tabelle **leer** oder **fehlerhaft** ist → CSV-Datei nochmal überprüfen
+
+**CSV mit Excel bearbeiten:** Auf **„Bearbeiten"** klicken, Änderungen speichern
+und die CSV-Datei in Excel schließen. Die Teilnehmer-Vorschau wird danach
+automatisch neu geladen.
 
 ### Schritt 4: Dokumentation erstellen
 

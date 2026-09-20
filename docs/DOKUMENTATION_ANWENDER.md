@@ -44,7 +44,7 @@ flowchart TD
 
 ### Schritt 1: Archiv entpacken
 
-1. Die Datei `TN-Doku-Konfigurator_v1.2.4.zip` mit dem Windows-Explorer entpacken
+1. Die Datei `TN-Doku-Konfigurator_v1.2.5.zip` mit dem Windows-Explorer entpacken
 2. Der entpackte Ordner enthält die Anwendung und alle nötigen Dateien
 
 ### Schritt 2: Anwendung starten
@@ -113,10 +113,21 @@ Die Anwendung versucht automatisch folgende Werte zu erkennen und vorzufüllen:
 Die Standardwerte werden als **relative Pfade zur EXE** angezeigt.
 
 Falls diese nicht gefunden werden oder angepasst werden sollen:
-1. Auf **„Ordner …"** bzw. **„Öffnen …"** klicken
-2. Datei oder Ordner auswählen
+1. Den Pfad im jeweiligen Eingabefeld anpassen.
+2. Bei Ordnern auf **„Ordner …"** klicken und den gewünschten Ordner auswählen.
 
 Bei manueller Auswahl übernimmt die Anwendung den Pfad als **absoluten Pfad**.
+
+#### CSV-Datei bearbeiten
+
+1. Auf **„Bearbeiten"** neben der CSV-Datei klicken.
+2. Die CSV-Datei wird in einer eigenen Microsoft-Excel-Instanz geöffnet.
+3. Änderungen speichern und die CSV-Datei anschließend in Excel schließen.
+4. TN-Doku-Konfigurator lädt die CSV automatisch neu und aktualisiert die Teilnehmer-Vorschau.
+
+Während die CSV bearbeitet wird, kann die Dokumentation nicht gestartet werden.
+Für diese Funktion muss Microsoft Excel installiert sein; für die eigentliche
+Erstellung der Dokumentation bleibt Excel weiterhin nicht erforderlich.
 
 #### Schritt C: Dokumentation erstellen
 
@@ -218,7 +229,7 @@ Falls sich die Vorlagen ändern:
 ### Log zeigt Fehler
 
 **Fehler: CSV-Datei nicht gefunden**
-- Sicherstellen, dass `data/Teilnehmer_Beginn.CSV` vorhanden ist oder via Button ausgewählt wurde
+- Sicherstellen, dass `data/Teilnehmer_Beginn.CSV` vorhanden ist oder der korrekte Pfad im CSV-Eingabefeld steht
 - **Dateiname-Schreibweise prüfen** (Groß-/Kleinschreibung beachten)
 
 **Fehler: Ablagesystem-Ordner nicht gefunden**

@@ -112,7 +112,7 @@ Größere Listen dauern länger, aber linear.
 
 ### F: Kann ich mehrere Gruppen hintereinander verarbeiten?
 **A:** Ja! Nach Abschluss einer Gruppe:
-1. Neue CSV eintragen (oder via Button auswählen)
+1. Neue CSV im Eingabefeld eintragen oder die aktuelle CSV über **„Bearbeiten"** in Excel anpassen und schließen
 2. **„Dokumentation erstellen"** erneut klicken
 3. Ein neuer `Jahrgang XXXX`-Ordner wird erstellt
 

@@ -13,6 +13,25 @@ _Keine Änderungen._
 
 ---
 
+## [1.2.5] – 2026-09-20
+
+### Added (1.2.5)
+
+- Die Schaltfläche **„Bearbeiten"** öffnet die konfigurierte Teilnehmer-CSV in einer eigenen Microsoft-Excel-Instanz.
+- Nach dem Speichern und Schließen der CSV in Excel werden Teilnehmerdaten und Vorschau automatisch neu geladen.
+- Die Excel-Erkennung berücksichtigt Benutzer- und Systemregistrierung sowie 32- und 64-Bit-Registryansichten.
+
+### Changed
+
+- Die Versionsnummer wird beim normalen Build automatisch nach Semantic Versioning als Patch-Bump erhöht.
+- Patch-Versionen laufen unbegrenzt weiter (z. B. `1.2.9` → `1.2.10`); für fachliche Releases können Minor und Major gezielt gewählt werden.
+
+### Fixed (1.2.5)
+
+- Quiet-Builds werten PyInstaller-Statusmeldungen auf `stderr` nicht mehr fälschlich als Buildfehler.
+
+---
+
 ## [1.2.4] – 2026-09-20
 
 ### Fixed (1.2.4)

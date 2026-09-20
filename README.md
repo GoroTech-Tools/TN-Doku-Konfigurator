@@ -9,7 +9,7 @@ Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von P
 
 ## Version
 
-1.2.4 (Build: 20.09.2026)
+1.2.5 (Build: 20.09.2026)
 
 ## Funktionen
 
@@ -102,11 +102,15 @@ TN-Doku-Konfigurator/
 # Anwendung direkt starten (Entwicklungsmodus)
 .\.venv\Scripts\python.exe src/main.py
 
-# EXE und ZIP erstellen
+# EXE und ZIP erstellen (erhöht automatisch die Patch-Version)
 .\src\build.ps1
 
 # Ohne Versionserhöhung (z. B. nur für Tests)
 .\src\build.ps1 -NoVersionBump
+
+# Minor- bzw. Major-Version erhöhen
+.\src\build.ps1 -VersionIncrement Minor
+.\src\build.ps1 -VersionIncrement Major
 
 # Nur EXE, kein ZIP
 .\src\build.ps1 -SkipZip

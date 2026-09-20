@@ -3,6 +3,7 @@ main.py – TN-Doku-Konfigurator
 Tkinter-GUI für die automatische Erstellung von Teilnehmer-Ablagesystemen.
 """
 import os
+import subprocess
 import sys
 import threading
 import tkinter as tk
@@ -18,6 +19,34 @@ WINDOW_W = 780
 WINDOW_H = 700
 USER_DOC_FILE = "DOKUMENTATION_ANWENDER.md"
 TECH_DOC_FILE = "DOKUMENTATION_TECHNIK.md"
+
+
+def find_excel_executable() -> str | None:
+    """Ermittelt den von Windows registrierten Pfad zu Microsoft Excel."""
+    try:
+        import winreg
+    except ImportError:
+        return None
+
+    key_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\excel.exe"
+    registry_views = (
+        0,
+        winreg.KEY_WOW64_64KEY,
+        winreg.KEY_WOW64_32KEY,
+    )
+    for hive in (winreg.HKEY_CURRENT_USER, winreg.HKEY_LOCAL_MACHINE):
+        for registry_view in registry_views:
+            try:
+                with winreg.OpenKey(
+                    hive, key_path, 0, winreg.KEY_READ | registry_view
+                ) as key:
+                    excel_path, _ = winreg.QueryValueEx(key, "")
+                excel_path = os.path.expandvars(str(excel_path)).strip('"')
+                if os.path.isfile(excel_path):
+                    return excel_path
+            except OSError:
+                continue
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -36,6 +65,7 @@ class App(tk.Tk):
 
         self._participants: list[dict] = []
         self._loaded_csv_path: str | None = None
+        self._csv_is_being_edited = False
         self._build()
         self._load_defaults()
 
@@ -58,7 +88,10 @@ class App(tk.Tk):
         self._csv_entry.grid(row=0, column=1, sticky="ew", pady=3)
         self._csv_entry.bind("<FocusOut>", self._on_csv_entry_focus_out)
         self._csv_entry.bind("<Return>", self._on_csv_entry_return)
-        ttk.Button(frm_top, text="Öffnen …", command=self._browse_csv, width=10).grid(
+        self._edit_csv_btn = ttk.Button(
+            frm_top, text="Bearbeiten", command=self._edit_csv, width=10
+        )
+        self._edit_csv_btn.grid(
             row=0, column=2, padx=(4, 0), pady=3
         )
 
@@ -208,17 +241,60 @@ class App(tk.Tk):
     # Datei-/Ordner-Dialoge
     # ------------------------------------------------------------------
 
-    def _browse_csv(self):
-        initial_csv = self._resolve_path(self._csv_var.get())
-        initial_dir = os.path.dirname(initial_csv) if initial_csv else self._app_dir
-        path = filedialog.askopenfilename(
-            title="Teilnehmer-CSV auswählen",
-            initialdir=initial_dir,
-            filetypes=[("CSV-Dateien", "*.csv *.CSV"), ("Alle Dateien", "*.*")],
-        )
-        if path:
-            self._csv_var.set(os.path.abspath(path))
-            self._load_csv()
+    def _edit_csv(self):
+        """Öffnet die konfigurierte CSV in einer eigenen Excel-Instanz."""
+        if self._csv_is_being_edited:
+            return
+
+        csv_path = self._resolve_path(self._csv_var.get())
+        if not csv_path or not os.path.isfile(csv_path):
+            messagebox.showerror(
+                "CSV-Datei nicht gefunden",
+                "Bitte geben Sie eine vorhandene CSV-Datei im Eingabefeld an.",
+            )
+            return
+
+        excel_path = find_excel_executable()
+        if not excel_path:
+            messagebox.showerror(
+                "Microsoft Excel nicht gefunden",
+                "Zum Bearbeiten der CSV-Datei wird Microsoft Excel benötigt.",
+            )
+            return
+
+        self._csv_is_being_edited = True
+        self._edit_csv_btn.configure(state="disabled")
+        self._run_btn.configure(state="disabled")
+        self._status_var.set("CSV wird in Excel bearbeitet …")
+
+        def worker():
+            try:
+                # /x startet eine eigene Excel-Instanz. Daher endet der Prozess,
+                # sobald die bearbeitete CSV geschlossen wird.
+                subprocess.run([excel_path, "/x", csv_path], check=False)
+                self.after(0, self._on_csv_editor_closed)
+            except OSError as e:
+                self.after(0, self._on_csv_editor_error, str(e))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _on_csv_editor_closed(self):
+        """Lädt die Teilnehmerdaten nach dem Schließen der Excel-Datei neu."""
+        self._csv_is_being_edited = False
+        self._edit_csv_btn.configure(state="normal")
+        self._load_csv(silent=False)
+        if self._participants:
+            self._status_var.set(
+                f"CSV nach Bearbeitung neu geladen: "
+                f"{os.path.basename(self._loaded_csv_path or '')}"
+            )
+
+    def _on_csv_editor_error(self, message: str):
+        self._csv_is_being_edited = False
+        self._edit_csv_btn.configure(state="normal")
+        self._run_btn.configure(state="normal" if self._participants else "disabled")
+        self._status_var.set("Excel konnte nicht gestartet werden.")
+        messagebox.showerror("Excel konnte nicht gestartet werden", message)
 
     def _on_csv_entry_focus_out(self, _event=None):
         """Lädt CSV still im Hintergrund, wenn das Feld verlassen wird."""
@@ -292,6 +368,14 @@ class App(tk.Tk):
     # ------------------------------------------------------------------
 
     def _start_run(self):
+        if self._csv_is_being_edited:
+            messagebox.showinfo(
+                "CSV wird bearbeitet",
+                "Bitte schließen Sie die CSV-Datei in Excel. Anschließend wird sie "
+                "automatisch neu geladen.",
+            )
+            return
+
         current_csv_path = self._resolve_path(self._csv_var.get())
         if current_csv_path and current_csv_path != self._loaded_csv_path:
             self._load_csv(silent=False)

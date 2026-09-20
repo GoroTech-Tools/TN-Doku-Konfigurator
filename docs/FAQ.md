@@ -36,6 +36,12 @@
 3. **Beschädigte Datei** – Nochmal herunterladen
 4. **System-Dateien** – Windows Update durchführen
 
+### F: Beim Start erscheint `ModuleNotFoundError: No module named 'docx'`. Was nun?
+**A:** Diese Meldung weist auf ein unvollständiges oder älteres Paket hin. Lade das
+aktuelle Release erneut herunter, entpacke `TN-Doku-Konfigurator_v1.2.4.zip`
+vollständig in einen neuen Ordner und starte die darin enthaltene EXE. Die
+Version 1.2.4 enthält `python-docx` vollständig im EXE-Bundle.
+
 ### F: Kann ich die Anwendung auf einen USB-Stick kopieren?
 **A:** Ja! Einfach den kompletten entpackten Ordner auf den USB-Stick kopieren. Sie läuft überall.
 
@@ -71,7 +77,7 @@ Name,Maßnahme,Maßnahmekürzel
 Nicht empfohlen: ANSI (kann zu Problemen mit Umlauten führen)
 
 ### F: Wie erstelle ich eine CSV mit Excel?
-**A:** 
+**A:**
 1. Daten in Excel eintragen
 2. **Datei → Speichern unter**
 3. **Format wählen:** „CSV (Trennzeichen-getrennt) (.csv)"
@@ -83,7 +89,7 @@ Nicht empfohlen: ANSI (kann zu Problemen mit Umlauten führen)
 **A:** Nein, nur die Datenzeilen (Header + Teilnehmerdaten). Leerzeilen werden ignoriert, können aber zu Fehlern führen.
 
 ### F: Was ist der Unterschied zwischen „Maßnahme" und „Maßnahmekürzel"?
-**A:** 
+**A:**
 - **Maßnahme:** Vollständiger Name, z. B. `KBM 2601`
 - **Maßnahmekürzel:** Abkürzung, z. B. `KBM`
 
@@ -117,7 +123,7 @@ Größere Listen dauern länger, aber linear.
 **A:** Ja! Die erzeugte `Anwesenheitsliste KFL XXXX.docx` ist eine normale Word-Datei. Du kannst sie öffnen und mit Word bearbeiten, ohne dass die Anwendung das sieht.
 
 ### F: Werden Makros in Excel/Word bewahrt?
-**A:** 
+**A:**
 - **Excel (XLSM):** Ja, Makros werden bewahrt mit `keep_vba=True`
 - **Word (DOCX):** Nein, Word-Makros (DOCM) werden nicht unterstützt
 
@@ -126,9 +132,9 @@ Größere Listen dauern länger, aber linear.
 ## Ausgabe & Ergebnis
 
 ### F: Wo landen die erstellten Dateien?
-**A:** Im Ausgabe-Ordner (standardmäßig `_Ausgabe`):
+**A:** Im Ausgabe-Ordner (standardmäßig `output`):
 ```
-_Ausgabe/
+output/
 └── Jahrgang 2601/
     ├── Anwesenheitsliste KFL 2601.docx
     ├── Müller, Klaus - KBM/
@@ -140,9 +146,9 @@ _Ausgabe/
 **A:** Ja! Den Ordner `Jahrgang XXXX` einfach mit dem Windows-Explorer verschieben oder kopieren.
 
 ### F: Was passiert, wenn ich einen Jahrgangsordner nochmal mit derselben CSV verarbeite?
-**A:** 
-- Ein neuer `Jahrgang XXXX`-Ordner wird erstellt (derselbe Name)
-- Der alte Ordner wird **nicht überschrieben** – stattdessen bekommen neue Ordner einen Zähler: `Jahrgang 2601 (1)`, `Jahrgang 2601 (2)`, etc.
+**A:**
+- Der vorhandene `Jahrgang XXXX`-Ordner wird weiterverwendet.
+- Bereits vorhandene Teilnehmer-Ordner werden nicht überschrieben.
 
 ### F: Kann ich Ausgabe-Ordner und Ablagesystem-Ordner auf unterschiedliche Laufwerke legen?
 **A:** Ja! Du kannst beliebige Pfade via Button auswählen. Sie müssen nicht im gleichen Verzeichnis sein.
@@ -152,7 +158,7 @@ _Ausgabe/
 ## Fehlerbehandlung
 
 ### F: Fehler „CSV-Datei nicht gefunden"
-**A:** 
+**A:**
 1. **Prüfen:** Existiert die Datei `data/Teilnehmer_Beginn.CSV`?
 2. **Prüfen:** Ist der Dateiiname exakt korrekt (Groß-/Kleinschreibung, Umlaute)?
 3. **Lösungsweg:** Datei manuell via Button auswählen
@@ -185,7 +191,7 @@ _Ausgabe/
 ## Wartung & Updates
 
 ### F: Wie aktualisiere ich die Anwendung?
-**A:** 
+**A:**
 1. Neue ZIP-Datei von GitHub herunterladen (neuere Versionsnummer)
 2. In einen neuen Ordner entpacken
 3. `data/Ablagesystem` und `data/Teilnehmer_Beginn.CSV` aus der alten Version **übernehmen** oder **neu bereitstellen**
@@ -197,7 +203,7 @@ Alte und neue Version können nebeneinander existieren.
 **A:** Momentan nein. Du musst die neue ZIP manuell herunterladen. In Zukunft könnte es einen Auto-Updater geben.
 
 ### F: Wo melde ich Fehler oder Bugs?
-**A:** 
+**A:**
 - GitHub Issues: [https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/issues](https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/issues)
 - Direkt per E-Mail an die Entwicklung
 
@@ -253,7 +259,7 @@ Bauer, Tim;IBA 2601;IBA           ← Gleicher Suffix: 2601
 **A:** Ja! Der Code in `core.py` ist GUI-unabhängig und kann einfach direkt aufgerufen werden. Eine CLI-Variante ist machbar.
 
 ### F: Wie kann ich für das Projekt beitragen?
-**A:** 
+**A:**
 1. GitHub-Repo forken
 2. Feature-Branch erstellen
 3. Änderungen vornehmen

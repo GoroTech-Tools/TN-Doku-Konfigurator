@@ -13,6 +13,20 @@ _Keine Änderungen._
 
 ---
 
+## [1.2.4] – 2026-09-20
+
+### Fixed (1.2.4)
+
+- `python-docx` wird beim PyInstaller-Build vollständig in die Onefile-EXE eingebunden.
+- Die portable EXE startet ohne `ModuleNotFoundError: No module named 'docx'`.
+
+### Changed (1.2.4)
+
+- Der Build verwendet bevorzugt die Projekt-`.venv` und prüft die erforderliche Word-Abhängigkeit vor dem Paketieren.
+- Release-Dokumentation und ZIP-Beispiele auf das versionierte Format `TN-Doku-Konfigurator_v{version}.zip` aktualisiert.
+
+---
+
 ## [1.0.0] – 2026-05-31
 
 ### Changed (1.0.0)

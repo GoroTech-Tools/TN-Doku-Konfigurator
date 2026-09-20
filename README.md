@@ -9,7 +9,7 @@ Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von P
 
 ## Version
 
-1.0.0 (Build: 31.05.2026)
+1.2.4 (Build: 20.09.2026)
 
 ## Funktionen
 
@@ -22,6 +22,8 @@ Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von P
 - **Anwesenheitsliste erzeugen** – erstellt eine befüllte Word-Datei auf Basis
   der Word-Vorlage; **kein installiertes Office erforderlich**.
 - **Portabel** – kein Python, keine Installation nötig (Windows 10/11, 64-bit).
+- **Vollständig gebündelt** – Word-Dokumente werden mit `python-docx` verarbeitet;
+  die benötigte Bibliothek ist in der EXE enthalten.
 
 ## Voraussetzungen
 

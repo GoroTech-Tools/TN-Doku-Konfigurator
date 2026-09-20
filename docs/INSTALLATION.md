@@ -41,12 +41,12 @@ flowchart TD
 ### Option 1: Portable EXE (empfohlen)
 
 **Schritt 1: Archiv herunterladen**
-- Die Datei `TN-Doku-Konfigurator_1.0.0.zip` herunterladen
+- Die Datei `TN-Doku-Konfigurator_v1.2.4.zip` herunterladen
 
 **Schritt 2: Entpacken**
 1. **Rechtsklick** auf die ZIP-Datei
 2. **„Alle extrahieren" oder „Extract All"** auswählen
-3. Ein neuer Ordner `TN-Doku-Konfigurator-v1.0.0` entsteht
+3. Einen neuen, leeren Zielordner auswählen
 
 **Schritt 3: Starten**
 1. Den entpackten Ordner öffnen
@@ -226,7 +226,7 @@ Falls alles OK → **Fertig!**
 **Problem:** EXE stellt sich hin oder zeigt einen Fehler
 
 **Lösungen:**
-1. **Windows-Sicherheit deaktiviert?** 
+1. **Windows-Sicherheit deaktiviert?**
    - Antivirus/Windows Defender könnte die EXE blockieren
    - Lösung: In den Sicherheitseinstellungen die EXE freigeben
 2. **Falsche Architektur?**
@@ -283,7 +283,7 @@ Falls alles OK → **Fertig!**
 Die Anwendung ist **portabel** – keine echte Installation nötig!
 
 **Zum Löschen:**
-- Den Ordner `TN-Doku-Konfigurator-v1.0.0` einfach **löschen**
+- Den entpackten Anwendungsordner einfach **löschen**
 - Keine Dateien in Windows-Registrierung oder `AppData` vorhanden
 - Fertig!
 

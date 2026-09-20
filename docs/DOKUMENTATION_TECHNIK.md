@@ -174,9 +174,9 @@ Ermittelt Basisverzeichnis:
 
 ```python
 BUILD_INFO = {
-    'version': '1.0.0',
-    'build_date': '2026-05-18T20:30:00',
-    'python_version': '3.13.7',
+    'version': '1.2.4',
+    'build_date': '2026-09-20T00:00:00',
+    'python_version': '3.13.14',
     'platform': 'win32',
 }
 ```
@@ -192,15 +192,17 @@ Wird von `src/build.ps1` automatisch aktualisiert.
 PowerShell-Skript für vollautomatisches Build & Release.
 
 **Funktionsweise:**
-1. **Version-Bump:** Liest `src/build_info.py`, erhöht Patch-Version (z. B. 1.0.1 → 1.0.2)
-2. **PyInstaller:** Ruft `.spec`-Datei auf, erstellt eine Onefile-EXE in `dist/`
-3. **Artifacts kopieren:**
-   - `_Listen/` → `dist/{folder}/`
-   - `Teilnehmer_Beginn.CSV` → `dist/{folder}/`
+1. **Version-Bump:** Liest `src/build_info.py`, erhöht die Patch-Version (z. B. 1.2.4 → 1.2.4).
+2. **Abhängigkeitsprüfung:** Verwendet bevorzugt die Projekt-`.venv` und prüft vor dem Build den Import von `python-docx`.
+3. **PyInstaller:** Ruft die `.spec`-Datei auf, erstellt eine Onefile-EXE in `dist/` und bindet `python-docx` ein.
+4. **Artifacts kopieren:**
+    - `data/Ablagesystem/` → `dist/{folder}/data/Ablagesystem/`
+    - `data/Teilnehmer_Beginn.CSV` → `dist/{folder}/data/Teilnehmer_Beginn.CSV`
    - `README.md` → `dist/{folder}/`
-   - `LICENSE` → `dist/{folder}/`
-4. **ZIP-Erstellung:** Nutzt .NET `ZipFile.CreateFromDirectory()`
-5. **Output:** `release/TN-Doku-Konfigurator_{version}.zip`
+    - `docs/` → `dist/{folder}/docs/`
+5. **Archivierung:** Verschiebt ältere Release-Artefakte nach `release/_Archiv/`.
+6. **ZIP-Erstellung:** Nutzt .NET `ZipFile.CreateFromDirectory()`.
+7. **Output:** `release/TN-Doku-Konfigurator_v{version}.zip` und `release/RELEASE_NOTES_v{version}.md`.
 
 **Parameter:**
 
@@ -231,6 +233,7 @@ PyInstaller-Konfiguration.
 - `console=False`: Keine Konsole (GUI-only)
 - `icon`: Logo (falls vorhanden)
 - `datas`: `src/build_info.py` eingebunden
+- `hiddenimports`: Module von `python-docx`, damit Word-Verarbeitung auch in der Onefile-EXE verfügbar ist
 
 ---
 
@@ -291,7 +294,7 @@ output/
 
 ### Für Endbenutzer
 
-1. `release/TN-Doku-Konfigurator_{version}.zip` herunterladen
+1. `release/TN-Doku-Konfigurator_v{version}.zip` herunterladen
 2. Entpacken
 3. `TN-Doku-Konfigurator.exe` ausführen
 4. **Kein Python, kein Setup nötig**
@@ -304,7 +307,7 @@ output/
 4. Dateien landen in:
     - Onefile-EXE (Build-Output): `dist/TN-Doku-Konfigurator.exe`
     - Verteilungsordner: `dist/TN-Doku-Konfigurator-v{version}/`
-    - ZIP: `release/TN-Doku-Konfigurator_{version}.zip`
+    - ZIP: `release/TN-Doku-Konfigurator_v{version}.zip`
 
 ### Build/Release-Pipeline (Grafik)
 

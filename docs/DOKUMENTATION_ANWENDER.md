@@ -44,7 +44,7 @@ flowchart TD
 
 ### Schritt 1: Archiv entpacken
 
-1. Die Datei `TN-Doku-Konfigurator_1.0.0.zip` mit dem Windows-Explorer entpacken
+1. Die Datei `TN-Doku-Konfigurator_v1.2.4.zip` mit dem Windows-Explorer entpacken
 2. Der entpackte Ordner enthält die Anwendung und alle nötigen Dateien
 
 ### Schritt 2: Anwendung starten
@@ -191,7 +191,7 @@ flowchart TD
    - **Name:** Nachname, Vorname (z. B. `Müller, Klaus`)
    - **Maßnahme:** Vollständiger Name mit Suffix (z. B. `KBM 2601`)
    - **Maßnahmekürzel:** Abkürzung (z. B. `KBM`)
-4. **Speichern:** 
+4. **Speichern:**
    - Format: **CSV (Trennzeichen-getrennt) (.csv)**
    - **Trennzeichen:** Semikolon (`;`)
    - **Dateiname:** `data/Teilnehmer_Beginn.CSV`

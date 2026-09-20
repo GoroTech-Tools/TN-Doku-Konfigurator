@@ -170,9 +170,13 @@ function New-ReleaseNotesContent {
             $pattern = "(?ms)^## \[$escapedVersion\].*?(?=^## \[|\z)"
             $match = [regex]::Match($changelog, $pattern)
             if ($match.Success) {
-                $lines.Add("## Änderungen")
+                $lines.Add("## Changes")
                 $lines.Add("")
-                foreach ($line in ($match.Value.Trim() -split "`r?`n")) {
+                $changeLines = $match.Value.Trim() -split "`r?`n"
+                foreach ($line in ($changeLines | Select-Object -Skip 1)) {
+                    if ($line.Trim() -eq '---') {
+                        break
+                    }
                     $lines.Add($line)
                 }
                 $lines.Add("")
@@ -183,10 +187,10 @@ function New-ReleaseNotesContent {
         }
     }
 
-    $lines.Add("## Änderungen")
+    $lines.Add("## Changes")
     $lines.Add("")
-    $lines.Add("- Build erfolgreich erstellt.")
-    $lines.Add("- Details siehe Changelog unter docs/CHANGELOG.md.")
+    $lines.Add("- Build successfully created.")
+    $lines.Add("- Details: see docs/CHANGELOG.md.")
     $lines.Add("")
 
     return ($lines -join "`r`n")
@@ -217,6 +221,7 @@ if (Test-Path $buildInfoPath) {
             $newDate = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
             $content = $content -replace "'version':\s*'[0-9]+\.[0-9]+\.[0-9]+'", "'version': '$newVersion'"
             $content = $content -replace "'build_date':\s*'[^']+'", "'build_date': '$newDate'"
+            $content = $content.TrimEnd() + [Environment]::NewLine
             Set-Content $buildInfoPath $content -Encoding UTF8
             Write-Host "Neue Version: $newVersion" -ForegroundColor Cyan
 
@@ -301,19 +306,33 @@ New-Item -ItemType Directory -Path (Split-Path $pyInstallerLog -Parent) -Force |
 
 $specPath = Join-Path $PSScriptRoot 'TN-Doku-Konfigurator.spec'
 $pythonLauncher = $null
-$pythonCmd = Get-Command python -ErrorAction SilentlyContinue
-if ($pythonCmd) {
-    $pythonLauncher = $pythonCmd.Source
+$venvPython = Join-Path $projectDir '.venv\Scripts\python.exe'
+if (Test-Path $venvPython) {
+    $pythonLauncher = $venvPython
+    Write-Host "Verwende Projekt-venv: $pythonLauncher" -ForegroundColor DarkGray
 } else {
-    $pyCmd = Get-Command py -ErrorAction SilentlyContinue
-    if ($pyCmd) {
-        $pythonLauncher = $pyCmd.Source
+    $pythonCmd = Get-Command python -ErrorAction SilentlyContinue
+    if ($pythonCmd) {
+        $pythonLauncher = $pythonCmd.Source
+    } else {
+        $pyCmd = Get-Command py -ErrorAction SilentlyContinue
+        if ($pyCmd) {
+            $pythonLauncher = $pyCmd.Source
+        }
     }
 }
 
 if (-not $pythonLauncher) {
     Write-Host "Weder 'python' noch 'py' wurde im PATH gefunden." -ForegroundColor Red
     exit 1
+}
+
+if (Test-Path $venvPython) {
+    & $pythonLauncher -c "import docx; print(docx.__file__)" *> $null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "python-docx fehlt in der Projekt-venv. Bitte 'pip install python-docx' ausführen." -ForegroundColor Red
+        exit 1
+    }
 }
 
 if ($Quiet) {
@@ -409,12 +428,74 @@ Write-Host "  docs/ validiert." -ForegroundColor DarkGray
 $releaseDir = Join-Path $projectDir 'release'
 New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
 
+function Move-ReleaseItemToArchive {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourcePath,
+        [Parameter(Mandatory = $true)]
+        [string]$ArchivePath
+    )
+
+    $attempt = 0
+    while ($attempt -lt 5) {
+        try {
+            if (Test-Path $ArchivePath) {
+                Remove-Item $ArchivePath -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            Move-Item -Path $SourcePath -Destination $ArchivePath -Force -ErrorAction Stop
+            return
+        } catch {
+            $attempt++
+            if ($attempt -ge 5) {
+                Write-Host "  Warnung: Verschieben von '$SourcePath' nach '_Archiv' nach 5 Versuchen fehlgeschlagen: $_" -ForegroundColor Yellow
+                return
+            }
+            Start-Sleep -Seconds 1
+        }
+    }
+}
+
+function Move-PreviousReleasesToArchive {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ReleaseDir,
+        [Parameter(Mandatory = $true)]
+        [string]$CurrentVersion
+    )
+
+    $archiveDir = Join-Path $ReleaseDir '_Archiv'
+    New-Item -ItemType Directory -Path $archiveDir -Force | Out-Null
+
+    $archivePattern = '^TN-Doku-Konfigurator|^RELEASE_NOTES_v'
+    $items = Get-ChildItem -Path $ReleaseDir -Force | Where-Object {
+        $_.Name -ne '_Archiv' -and ($_.Name -match $archivePattern)
+    }
+
+    foreach ($item in $items) {
+        $currentZip = "TN-Doku-Konfigurator_v$CurrentVersion.zip"
+        $currentNotes = "RELEASE_NOTES_v$CurrentVersion.md"
+        if ($item.Name -eq $currentZip -or $item.Name -eq $currentNotes) {
+            continue
+        }
+
+        $target = Join-Path $archiveDir $item.Name
+        Move-ReleaseItemToArchive -SourcePath $item.FullName -ArchivePath $target
+        if (Test-Path $target) {
+            Write-Host "  Archiviert: $($item.Name) -> _Archiv" -ForegroundColor DarkGray
+        }
+    }
+}
+
+Move-PreviousReleasesToArchive -ReleaseDir $releaseDir -CurrentVersion $newVersion
+
 $zipName = $null
 $zipPath = $null
 
 if (-not $SkipZip) {
     Write-Host "`n3. ZIP-Archiv erstellen ..." -ForegroundColor Yellow
-    $zipName = "TN-Doku-Konfigurator_$newVersion.zip"
+    $zipName = "TN-Doku-Konfigurator_v$newVersion.zip"
     $zipPath = Join-Path $releaseDir $zipName
 
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
@@ -425,8 +506,15 @@ if (-not $SkipZip) {
         $sizeMb = [math]::Round((Get-Item $zipPath).Length / 1MB, 1)
         Write-Host "ZIP: $zipName ($sizeMb MB)" -ForegroundColor Green
     } catch {
-        Write-Host "ZIP-Erstellung fehlgeschlagen: $_" -ForegroundColor Red
-        exit 1
+        Write-Host "System.IO.Compression fehlgeschlagen, verwende Compress-Archive-Fallback..." -ForegroundColor Yellow
+        try {
+            Compress-Archive -Path (Join-Path $distPath '*') -DestinationPath $zipPath -Force
+            $sizeMb = [math]::Round((Get-Item $zipPath).Length / 1MB, 1)
+            Write-Host "ZIP: $zipName ($sizeMb MB)" -ForegroundColor Green
+        } catch {
+            Write-Host "ZIP-Erstellung fehlgeschlagen: $_" -ForegroundColor Red
+            exit 1
+        }
     }
 }
 

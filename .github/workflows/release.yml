@@ -89,7 +89,7 @@ jobs:
         with:
           name: release-assets-v${{ env.VERSION }}
           path: |
-            release/TN-Doku-Konfigurator_${{ env.VERSION }}.zip
+            release/TN-Doku-Konfigurator_v${{ env.VERSION }}.zip
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
@@ -99,4 +99,4 @@ jobs:
           generate_release_notes: false
           body_path: release/RELEASE_NOTES_v${{ env.VERSION }}.md
           files: |
-            release/TN-Doku-Konfigurator_${{ env.VERSION }}.zip
+            release/TN-Doku-Konfigurator_v${{ env.VERSION }}.zip

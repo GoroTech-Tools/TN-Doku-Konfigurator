@@ -162,6 +162,16 @@ function New-ReleaseNotesContent {
     }
     $lines.Add("")
 
+    if ($ZipName) {
+        $releaseUrl = "https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/releases/tag/v$Version"
+        $downloadUrl = "https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/releases/download/v$Version/$ZipName"
+        $lines.Add("## Download")
+        $lines.Add("")
+        $lines.Add("- [Release-Seite v$Version]($releaseUrl)")
+        $lines.Add("- [ZIP direkt herunterladen]($downloadUrl)")
+        $lines.Add("")
+    }
+
     $changelogPath = Join-Path $ProjectDir 'docs\CHANGELOG.md'
     if (Test-Path $changelogPath) {
         try {

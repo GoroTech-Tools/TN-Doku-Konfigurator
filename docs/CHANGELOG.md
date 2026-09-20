@@ -1,4 +1,4 @@
-# Changelog – TN-Doku-Ersteller
+# Changelog – TN-Doku-Konfigurator
 <!-- markdownlint-disable MD012 -->
 
 Alle bemerkenswerten Änderungen dieses Projekts werden in dieser Datei dokumentiert.
@@ -17,9 +17,9 @@ _Keine Änderungen._
 
 ### Changed (1.0.0)
 
-- Projektbezeichnung in README und Dokumentation auf `TN-Doku-Ersteller` vereinheitlicht.
+- Projektbezeichnung in README und Dokumentation auf `TN-Doku-Konfigurator` vereinheitlicht.
 - Kontext präzisiert: Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von Personen im BFW Weser-Ems.
-- Build-/Release-Artefakte auf `TN-Doku-Ersteller` umgestellt (EXE, ZIP, Spec-Datei und Workflow-Pfade).
+- Build-/Release-Artefakte auf `TN-Doku-Konfigurator` umgestellt (EXE, ZIP, Spec-Datei und Workflow-Pfade).
 - Release-Version auf `1.0.0` gesetzt und Dokumentationsbeispiele aktualisiert.
 
 ---
@@ -29,7 +29,7 @@ _Keine Änderungen._
 ### Changed (3.0.6)
 
 - Versionsreferenzen in der Dokumentation auf `3.0.6` aktualisiert (`DOKUMENTATION_ANWENDER`, `DOKUMENTATION_TECHNIK`, `INSTALLATION`).
-- Build-/Release-Lauf für `v3.0.6` mit neuem ZIP-Artefakt (`TN-Doku-Ersteller_3.0.6.zip`) durchgeführt.
+- Build-/Release-Lauf für `v3.0.6` mit neuem ZIP-Artefakt (`TN-Doku-Konfigurator_3.0.6.zip`) durchgeführt.
 
 ### Fixed (3.0.6)
 
@@ -112,8 +112,8 @@ _Keine Änderungen._
 
 ### Changed (3.0.0)
 
-- Build-System auf **PyInstaller Onefile** umgestellt: Verteilung erfolgt jetzt mit einer einzelnen `TN-Doku-Ersteller.exe` im Paketordner.
-- `TN-Doku-Ersteller.spec` auf Onefile-Layout angepasst (kein `COLLECT`-/`_internal`-Ordner mehr im Release-Verzeichnis).
+- Build-System auf **PyInstaller Onefile** umgestellt: Verteilung erfolgt jetzt mit einer einzelnen `TN-Doku-Konfigurator.exe` im Paketordner.
+- `TN-Doku-Konfigurator.spec` auf Onefile-Layout angepasst (kein `COLLECT`-/`_internal`-Ordner mehr im Release-Verzeichnis).
 - `build.ps1` für Onefile-Ausgabe überarbeitet (Onefile-EXE wird erzeugt und anschließend in den versionierten Distributionsordner übernommen).
 
 ### Docs (3.0.0)
@@ -154,7 +154,7 @@ _Keine Änderungen._
 ### Added (2.0.1)
 
 - App-Icon (`app_icon.ico`) in EXE-Icon und GUI-Titelleiste integriert.
-- `TN-Doku-Ersteller.spec` um Icon-Pfad erweitert.
+- `TN-Doku-Konfigurator.spec` um Icon-Pfad erweitert.
 
 ---
 
@@ -238,7 +238,7 @@ src/
 
 Unterstützungsdateien:
 ├── build.ps1           # Build-Automatisierung
-├── TN-Doku-Ersteller.spec  # PyInstaller-Config
+├── TN-Doku-Konfigurator.spec  # PyInstaller-Config
 ├── setup.ps1           # Venv & Dependencies Setup
 ├── requirements.txt    # Python-Pakete
 ├── README.md           # Schnelleinstieg
@@ -301,7 +301,7 @@ Unterstützungsdateien:
 
 ## Versionierungsschema
 
-**TN-Doku-Ersteller** folgt [Semantic Versioning](https://semver.org/):
+**TN-Doku-Konfigurator** folgt [Semantic Versioning](https://semver.org/):
 
 - **MAJOR (X.0.0):** Breaking Changes, komplette Neuentwicklung
 - **MINOR (0.Y.0):** Neue Features (rückwärts-kompatibel)
@@ -368,8 +368,8 @@ Beispiele:
 ## Support & Lizenz
 
 - **Lizenz:** Siehe [LICENSE](./LICENSE)
-- **Repository:** [https://github.com/GoroTech-Tools/TN-Doku-Ersteller](https://github.com/GoroTech-Tools/TN-Doku-Ersteller)
-- **Issues:** [https://github.com/GoroTech-Tools/TN-Doku-Ersteller/issues](https://github.com/GoroTech-Tools/TN-Doku-Ersteller/issues)
+- **Repository:** [https://github.com/GoroTech-Tools/TN-Doku-Konfigurator](https://github.com/GoroTech-Tools/TN-Doku-Konfigurator)
+- **Issues:** [https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/issues](https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/issues)
 - **Dokumentation:** Siehe `docs/`-Ordner
 
 ---

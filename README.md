@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD012 -->
 
-# TN-Doku-Ersteller
+# TN-Doku-Konfigurator
 
 Portables Windows-Tool zur automatischen Erstellung von Teilnehmer-Ablagesystemen
 für neue Ausbildungsgruppen der Bildungseinrichtung.
@@ -33,7 +33,7 @@ Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von P
 1. ZIP-Archiv entpacken.
 2. Ordner `data/Ablagesystem` mit den aktuellen Vorlagen befüllen (sofern nicht bereits enthalten).
 3. `data/Teilnehmer_Beginn.CSV` mit den Teilnehmerdaten der neuen Gruppe befüllen.
-4. `TN-Doku-Ersteller.exe` starten.
+4. `TN-Doku-Konfigurator.exe` starten.
 5. CSV-Datei und Ausgabe-Ordner prüfen (werden automatisch vorausgefüllt).
 6. Auf **„Dokumentation erstellen"** klicken.
 7. Ergebnisse im Ordner `output` prüfen (`Jahrgang XXXX` + `Anwesenheitsliste KFL XXXX.docx`).
@@ -66,7 +66,7 @@ Umfangreiche Dokumentation im Ordner `docs/`:
 ## Projektstruktur (Quellcode)
 
 ```text
-TN-Doku-Ersteller/
+TN-Doku-Konfigurator/
 ├── src/
 │   ├── main.py
 │   ├── core.py
@@ -85,7 +85,7 @@ TN-Doku-Ersteller/
 ├── build.ps1
 ├── setup.ps1
 └── src/
-  ├── TN-Doku-Ersteller.spec
+  ├── TN-Doku-Konfigurator.spec
   ├── build.ps1
   ├── setup.ps1
   └── requirements.txt
@@ -116,7 +116,7 @@ Siehe [docs/CHANGELOG.md](docs/CHANGELOG.md) für die vollständige Versionsgesc
 
 ## Support & Links
 
-- **GitHub Repository:** [https://github.com/GoroTech-Tools/TN-Doku-Ersteller](https://github.com/GoroTech-Tools/TN-Doku-Ersteller)
-- **Issues & Feedback:** [https://github.com/GoroTech-Tools/TN-Doku-Ersteller/issues](https://github.com/GoroTech-Tools/TN-Doku-Ersteller/issues)
+- **GitHub Repository:** [https://github.com/GoroTech-Tools/TN-Doku-Konfigurator](https://github.com/GoroTech-Tools/TN-Doku-Konfigurator)
+- **Issues & Feedback:** [https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/issues](https://github.com/GoroTech-Tools/TN-Doku-Konfigurator/issues)
 - **Lizenz:** [LICENSE](docs/LICENSE)
 - **Dokumentation:** [docs/](docs/)

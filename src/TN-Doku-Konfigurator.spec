@@ -39,7 +39,7 @@ exe = EXE(
     a.datas,
     [],
     exclude_binaries=False,
-    name='TN-Doku-Ersteller',
+    name='TN-Doku-Konfigurator',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

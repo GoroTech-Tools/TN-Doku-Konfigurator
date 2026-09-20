@@ -20,7 +20,7 @@ if ($Force -and (Test-Path $venvDir)) {
 
 if (-not (Test-Path $venvDir)) {
     Write-Host "[$repo] Erstelle .venv ..."
-    py -m venv $venvDir
+    py -3.13 -m venv $venvDir
 } else {
     Write-Host "[$repo] .venv bereits vorhanden."
 }

@@ -1,5 +1,5 @@
 """
-core.py – Kernlogik für TN-Doku-Ersteller
+core.py – Kernlogik für TN-Doku-Konfigurator
 Portierung der PowerShell-Funktionen nach Python ohne Office-COM-Abhängigkeit.
 Verwendet: openpyxl (Excel), python-docx (Word), os/shutil (Dateisystem)
 """

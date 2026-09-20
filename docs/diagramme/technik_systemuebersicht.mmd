@@ -4,8 +4,8 @@ flowchart TD
     CORE --> FS[(Dateisystem\noutput/data)]
     CORE --> XLSM[openpyxl\nExcel/XLSM]
     CORE --> DOCX[python-docx\nWord/DOCX]
-    BUILD[src/build.ps1] --> SPEC[src/TN-Doku-Ersteller.spec]
-    SPEC --> EXE[[TN-Doku-Ersteller.exe]]
+    BUILD[src/build.ps1] --> SPEC[src/TN-Doku-Konfigurator.spec]
+    SPEC --> EXE[[TN-Doku-Konfigurator.exe]]
 
     classDef source fill:#e8f0fe,stroke:#1a73e8,color:#0b3d91;
     classDef process fill:#f3f4f6,stroke:#6b7280,color:#111827;

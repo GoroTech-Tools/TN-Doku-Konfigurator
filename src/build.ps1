@@ -1,4 +1,4 @@
-# Build-Skript für TN-Doku-Ersteller (primär in src)
+# Build-Skript für TN-Doku-Konfigurator (primär in src)
 # Erstellt EXE via PyInstaller und packt alles als ZIP ins release/-Verzeichnis.
 
 param(
@@ -16,7 +16,7 @@ if ($PSVersionTable.PSVersion.Major -ge 6) {
 $projectDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 
 function Show-Usage {
-    Microsoft.PowerShell.Utility\Write-Host "TN-Doku-Ersteller Build-Skript - Optionen:" -ForegroundColor DarkCyan
+    Microsoft.PowerShell.Utility\Write-Host "TN-Doku-Konfigurator Build-Skript - Optionen:" -ForegroundColor DarkCyan
     Microsoft.PowerShell.Utility\Write-Host "  -Help          : Nur diese Hilfe anzeigen und beenden" -ForegroundColor DarkGray
     Microsoft.PowerShell.Utility\Write-Host "  -NoVersionBump : Versionsnummer nicht erhöhen" -ForegroundColor DarkGray
     Microsoft.PowerShell.Utility\Write-Host "  -SkipZip       : ZIP-Erstellung überspringen" -ForegroundColor DarkGray
@@ -265,15 +265,15 @@ if (Test-Path $buildInfoPath) {
 # Typische Markdown-Fehler vor dem Build bereinigen (u. a. MD009/MD012/EOF-Newline)
 Invoke-MarkdownCleanup -ProjectDir $projectDir
 
-Write-Host "`nTN-Doku-Ersteller Build-Prozess" -ForegroundColor Green
+Write-Host "`nTN-Doku-Konfigurator Build-Prozess" -ForegroundColor Green
 Write-Host "=========================================" -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
 # Schritt 1: PyInstaller Build
 # ---------------------------------------------------------------------------
-$folderName = "TN-Doku-Ersteller-v$newVersion"
+$folderName = "TN-Doku-Konfigurator-v$newVersion"
 $distPath   = Join-Path $projectDir "dist\$folderName"
-$oneFileExePath = Join-Path $projectDir 'dist\TN-Doku-Ersteller.exe'
+$oneFileExePath = Join-Path $projectDir 'dist\TN-Doku-Konfigurator.exe'
 
 # Alte Build-Artefakte ggf. entfernen
 if (Test-Path $distPath) {
@@ -299,7 +299,7 @@ Write-Host "`n1. PyInstaller Build ..." -ForegroundColor Yellow
 $pyInstallerLog = Join-Path $projectDir 'build\last-pyinstaller.log'
 New-Item -ItemType Directory -Path (Split-Path $pyInstallerLog -Parent) -Force | Out-Null
 
-$specPath = Join-Path $PSScriptRoot 'TN-Doku-Ersteller.spec'
+$specPath = Join-Path $PSScriptRoot 'TN-Doku-Konfigurator.spec'
 $pythonLauncher = $null
 $pythonCmd = Get-Command python -ErrorAction SilentlyContinue
 if ($pythonCmd) {
@@ -337,7 +337,7 @@ if (-not (Test-Path $oneFileExePath)) {
 }
 
 New-Item -ItemType Directory -Path $distPath -Force | Out-Null
-Copy-Item -Path $oneFileExePath -Destination (Join-Path $distPath 'TN-Doku-Ersteller.exe') -Force
+Copy-Item -Path $oneFileExePath -Destination (Join-Path $distPath 'TN-Doku-Konfigurator.exe') -Force
 
 Write-Host "  EXE erstellt in: $distPath" -ForegroundColor Green
 
@@ -414,7 +414,7 @@ $zipPath = $null
 
 if (-not $SkipZip) {
     Write-Host "`n3. ZIP-Archiv erstellen ..." -ForegroundColor Yellow
-    $zipName = "TN-Doku-Ersteller_$newVersion.zip"
+    $zipName = "TN-Doku-Konfigurator_$newVersion.zip"
     $zipPath = Join-Path $releaseDir $zipName
 
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
@@ -444,8 +444,8 @@ Write-Host "Release Notes: $releaseNotesName" -ForegroundColor Green
 # ---------------------------------------------------------------------------
 Write-Host "`nBuild erfolgreich abgeschlossen!" -ForegroundColor Green
 Write-Host "Ergebnis: $distPath" -ForegroundColor Cyan
-$exePath = Join-Path $distPath 'TN-Doku-Ersteller.exe'
+$exePath = Join-Path $distPath 'TN-Doku-Konfigurator.exe'
 if (Test-Path $exePath) {
     $sizeMb = [math]::Round((Get-Item $exePath).Length / 1MB, 1)
-    Write-Host "EXE: TN-Doku-Ersteller.exe ($sizeMb MB)" -ForegroundColor Cyan
+    Write-Host "EXE: TN-Doku-Konfigurator.exe ($sizeMb MB)" -ForegroundColor Cyan
 }

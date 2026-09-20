@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD009 MD012 MD022 MD026 MD031 MD032 MD036 MD040 MD060 -->
 
-# Installationsanleitung – TN-Doku-Ersteller
+# Installationsanleitung – TN-Doku-Konfigurator
 
 Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von Personen im BFW Weser-Ems.
 
@@ -23,7 +23,7 @@ Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von P
 ```mermaid
 flowchart TD
    A([ZIP herunterladen]) --> B[Archiv entpacken]
-   B --> C[TN-Doku-Ersteller.exe starten]
+   B --> C[TN-Doku-Konfigurator.exe starten]
    C --> D[data/Ablagesystem prüfen]
    D --> E[data/Teilnehmer_Beginn.CSV vorbereiten]
    E --> F[Dokumentation erstellen]
@@ -41,16 +41,16 @@ flowchart TD
 ### Option 1: Portable EXE (empfohlen)
 
 **Schritt 1: Archiv herunterladen**
-- Die Datei `TN-Doku-Ersteller_1.0.0.zip` herunterladen
+- Die Datei `TN-Doku-Konfigurator_1.0.0.zip` herunterladen
 
 **Schritt 2: Entpacken**
 1. **Rechtsklick** auf die ZIP-Datei
 2. **„Alle extrahieren" oder „Extract All"** auswählen
-3. Ein neuer Ordner `TN-Doku-Ersteller-v1.0.0` entsteht
+3. Ein neuer Ordner `TN-Doku-Konfigurator-v1.0.0` entsteht
 
 **Schritt 3: Starten**
 1. Den entpackten Ordner öffnen
-2. **Doppelklick** auf `TN-Doku-Ersteller.exe`
+2. **Doppelklick** auf `TN-Doku-Konfigurator.exe`
 3. Das Fenster öffnet sich – fertig!
 
 **Wichtig:**
@@ -64,8 +64,8 @@ flowchart TD
 
 ```powershell
 # Repository klonen
-git clone https://github.com/GoroTech-Tools/TN-Doku-Ersteller.git
-cd TN-Doku-Ersteller
+git clone https://github.com/GoroTech-Tools/TN-Doku-Konfigurator.git
+cd TN-Doku-Konfigurator
 
 # Virtuelle Umgebung und Packages installieren
 .\src\setup.ps1
@@ -77,7 +77,7 @@ cd TN-Doku-Ersteller
 .\src\build.ps1
 ```
 
-Danach liegt die EXE in: `dist/TN-Doku-Ersteller-v{version}/TN-Doku-Ersteller.exe`
+Danach liegt die EXE in: `dist/TN-Doku-Konfigurator-v{version}/TN-Doku-Konfigurator.exe`
 
 ---
 
@@ -176,8 +176,8 @@ Der Ausgabe-Ordner wird automatisch erkannt oder kann manuell ausgewählt werden
 ### Schritt 1: EXE starten
 
 ```
-cd C:\Pfad\zum\TN-Doku-Ersteller
-TN-Doku-Ersteller.exe
+cd C:\Pfad\zum\TN-Doku-Konfigurator
+TN-Doku-Konfigurator.exe
 ```
 
 Das GUI-Fenster öffnet sich.
@@ -283,7 +283,7 @@ Falls alles OK → **Fertig!**
 Die Anwendung ist **portabel** – keine echte Installation nötig!
 
 **Zum Löschen:**
-- Den Ordner `TN-Doku-Ersteller-v1.0.0` einfach **löschen**
+- Den Ordner `TN-Doku-Konfigurator-v1.0.0` einfach **löschen**
 - Keine Dateien in Windows-Registrierung oder `AppData` vorhanden
 - Fertig!
 

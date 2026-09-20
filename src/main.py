@@ -1,5 +1,5 @@
 """
-main.py – TN-Doku-Ersteller
+main.py – TN-Doku-Konfigurator
 Tkinter-GUI für die automatische Erstellung von Teilnehmer-Ablagesystemen.
 """
 import os
@@ -13,7 +13,7 @@ from build_info import BUILD_INFO
 from core import get_app_dir, run_all
 from csv_reader import read_participants
 
-APP_TITLE = f"TN-Doku-Ersteller v{BUILD_INFO['version']}"
+APP_TITLE = f"TN-Doku-Konfigurator v{BUILD_INFO['version']}"
 WINDOW_W = 780
 WINDOW_H = 700
 USER_DOC_FILE = "DOKUMENTATION_ANWENDER.md"

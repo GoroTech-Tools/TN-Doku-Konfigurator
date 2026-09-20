@@ -1,10 +1,10 @@
 <!-- markdownlint-disable MD009 MD012 MD022 MD026 MD031 MD032 MD036 MD040 MD060 -->
 
-# Anwenderdokumentation – TN-Doku-Ersteller
+# Anwenderdokumentation – TN-Doku-Konfigurator
 
 ## Überblick
 
-**TN-Doku-Ersteller** ist ein Windows-Tool zur automatischen Erstellung von standardisierten Teilnehmer-Ablagesystemen für neue Ausbildungsgruppen. Das Tool erstellt automatisch:
+**TN-Doku-Konfigurator** ist ein Windows-Tool zur automatischen Erstellung von standardisierten Teilnehmer-Ablagesystemen für neue Ausbildungsgruppen. Das Tool erstellt automatisch:
 
 Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von Personen im BFW Weser-Ems.
 
@@ -22,7 +22,7 @@ Die Teilnehmer-Ablagesysteme gelten für die kaufmännische Qualifizierung von P
 
 ```mermaid
 flowchart TD
-   A([ZIP entpacken]) --> B[TN-Doku-Ersteller.exe starten]
+   A([ZIP entpacken]) --> B[TN-Doku-Konfigurator.exe starten]
    B --> C[CSV + Ablagesystem prüfen]
    C --> D[Dokumentation erstellen]
    D --> E[Verarbeitung (5 Schritte)]
@@ -44,13 +44,13 @@ flowchart TD
 
 ### Schritt 1: Archiv entpacken
 
-1. Die Datei `TN-Doku-Ersteller_1.0.0.zip` mit dem Windows-Explorer entpacken
+1. Die Datei `TN-Doku-Konfigurator_1.0.0.zip` mit dem Windows-Explorer entpacken
 2. Der entpackte Ordner enthält die Anwendung und alle nötigen Dateien
 
 ### Schritt 2: Anwendung starten
 
-- **Windows Explorer** → Ordner öffnen → Doppelklick auf `TN-Doku-Ersteller.exe`
-- Oder: **Kommandozeile/PowerShell** → `cd Pfad/zum/Ordner` → `.\TN-Doku-Ersteller.exe`
+- **Windows Explorer** → Ordner öffnen → Doppelklick auf `TN-Doku-Konfigurator.exe`
+- Oder: **Kommandozeile/PowerShell** → `cd Pfad/zum/Ordner` → `./TN-Doku-Konfigurator.exe`
 
 Die GUI öffnet sich – ein Fenster mit Eingabefeldern und einem Log-Bereich.
 
@@ -99,8 +99,8 @@ Bauer, Tim;BFK 2601;BFK
 ### 3. Anwendung nutzen
 
 #### Schritt A: GUI starten
-- `TN-Doku-Ersteller.exe` ausführen
-- Das Fenster „TN-Doku-Ersteller" öffnet sich
+- `TN-Doku-Konfigurator.exe` ausführen
+- Das Fenster „TN-Doku-Konfigurator" öffnet sich
 
 #### Schritt B: Eingabefelder prüfen
 
